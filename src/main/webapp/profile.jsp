@@ -3,6 +3,11 @@
 <jsp:useBean id="user" class="domain.ChessPlayer" scope="session"/>
 <jsp:useBean id="cpdm" class="persist.ChessPlayerDM" scope="session"/>
 <jsp:useBean id="cgdm" class="persist.ChessGameDM" scope="session"/>
+<%@ page import="domain.ChessGame" %>
+<%@ page import="java.util.List" %>
+<%@ page import="domain.Color" %>
+<c:set var="chessGameList" value="${cgdm.findByPlayerEmail(user.getEmail())}" scope="page"/>
+<% List<ChessGame> chessGameList = cgdm.findByPlayerEmail(user.getEmail()); %>
 <html>
     <head>
         <title>ChessBook</title>
@@ -10,6 +15,57 @@
     <body>
     <h1>ChessBook</h1>
     <h3>${user.name}</h3>
+    <% if (!chessGameList.isEmpty()) { %>
+        <h2>Current Games</h2>
+        <table>
+            <thead>
+            <tr>
+                <td>-</td>
+                <td>White</td>
+                <td>Time</td>
+                <td>Black</td>
+                <td>Time</td>
+                <td>Last move</td>
+                <td>--</td>
+            </tr>
+            </thead>
+            <tbody>
+            <% for(int i = 0; i < chessGameList.size(); i++) {
+                ChessGame game = chessGameList.get(i);%>
+                <tr>
+                    <td><%=i%></td>
+                    <td><%=game.getWhite().getName()%></td>
+                    <td><%=game.totalTime(Color.WHITE)%></td>
+                    <td><%=game.getBlack().getName()%></td>
+                    <td><%=game.totalTime(Color.BLACK)%></td>
+                    <% if(game.getWinner() == null) {%>
+                    <td><%=game.getTurn().opposite%></td>
+                    <% if(game.getWhite().getName().equals(user.getName()) && game.getTurn() == Color.WHITE) { %>
+                    <td><form action="game.jsp" method="get">
+                        <input type="hidden" name="id" value="<%=game.getId()%>">
+                        <input type="submit" value="Play">
+                    </form> </td>
+                    <% } else { %>
+                    <td><%=game.getTimestamp()%></td>
+                    <% } %>
+                    <% } else { %>
+                    <td><%=game.getOutcome()%></td>
+                    <td>
+                        <form method="get" action="findOpponent.jsp">
+                            <%if(game.getWhite().getName().equals(user.getName())) {%>
+                            <input type="hidden" name="name" value="<%=game.getBlack().getName()%>">
+                            <%} else {%>
+                            <input type="hidden" name="name" value="<%=game.getWhite().getName()%>">
+                            <%}%>
+                            <input type="submit" value="Replay">
+                        </form>
+                    </td>
+                    <% } %>
+                </tr>
+            <% } %>
+            </tbody>
+        </table>
+    <% } %>
     <h2>Start a new game</h2>
     <form method="GET" action="findOpponent.jsp">
         Enter the name of your opponent:<br>
