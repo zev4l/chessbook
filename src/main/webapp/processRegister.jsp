@@ -1,7 +1,7 @@
-<%@ page import="persist.ChessPlayerDM" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="cpdm" class="persist.ChessPlayerDM" scope="page"/>
+<jsp:useBean id="cpdm" class="persist.ChessPlayerDM" scope="session"/>
+<jsp:useBean id="cgdm" class="persist.ChessGameDM" scope="session"/>
 <html>
 <head>
     <title>ChessBook</title>

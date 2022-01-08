@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="cpdm" class="persist.ChessPlayerDM" scope="page"/>
+<jsp:useBean id="cpdm" class="persist.ChessPlayerDM" scope="session"/>
+<jsp:useBean id="cgdm" class="persist.ChessGameDM" scope="session"/>
 <%--<%@ page import="persist.ChessPlayerDM"%>--%>
 
 <c:choose>
@@ -25,6 +26,6 @@
         <jsp:useBean id="user" class="domain.ChessPlayer" scope="session">
             <jsp:setProperty name="user" property="*"/>
         </jsp:useBean>
-        <jsp:forward page="profile.jsp"/>
+        <jsp:forward page="index.jsp"/>
     </c:otherwise>
 </c:choose>
