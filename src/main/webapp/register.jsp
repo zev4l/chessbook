@@ -6,7 +6,7 @@
     <body>
     <h1>ChessBook</h1>
     <h2>ChessBook Registration</h2>
-    <form method="POST" action="login">
+    <form method="POST" action="processRegister.jsp">
         <label for="inputName">Name: </label>
         <input type="text" name="name" id="inputName">
         <br>

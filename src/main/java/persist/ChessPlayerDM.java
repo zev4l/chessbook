@@ -4,6 +4,7 @@ import domain.ChessPlayer;
 import domain.Main;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -65,6 +66,8 @@ public class ChessPlayerDM extends ADataMapper<ChessPlayer> {
             TypedQuery<ChessPlayer> query = em.createNamedQuery("findByName", ChessPlayer.class);
             query.setParameter(1, name);
             result = query.getResultList();
+        } catch (NoResultException e) {
+            result = null;
         } finally {
             em.close();
         }
@@ -79,6 +82,8 @@ public class ChessPlayerDM extends ADataMapper<ChessPlayer> {
             TypedQuery<ChessPlayer> query = em.createNamedQuery("findByEmail", ChessPlayer.class);
             query.setParameter(1, email);
             result = Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            result = null;
         } finally {
             em.close();
         }
