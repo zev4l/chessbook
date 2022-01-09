@@ -82,6 +82,11 @@ public class ChessBoard {
 
             // Set origin square to empty
             set(origin.getRow(), origin.getCol(), null);
+
+            // Se causar check à equipa contrária
+            if (Validation.isCheck(this, move.getPiece().getColor().opposite)) {
+                move.setCheck();
+            }
         } else {
             throw new IllegalMoveException("Jogada inválida!");
         }

@@ -38,7 +38,7 @@ public class ChessGame {
     @Transient
     private ChessBoard board;
 
-    private Winner winner; //W/B/D/Null
+    private Color winner;
     private Outcome outcome;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -69,7 +69,7 @@ public class ChessGame {
         this.black = black;
     }
 
-    public void setWinner(Winner winner) {
+    public void setWinner(Color winner) {
         this.winner = winner;
     }
 
@@ -108,7 +108,7 @@ public class ChessGame {
         return board;
     }
 
-    public Winner getWinner() {
+    public Color getWinner() {
         return winner;
     }
 
@@ -118,6 +118,10 @@ public class ChessGame {
 
     public Date getTimestamp() {
         return timestamp;
+    }
+
+    public boolean isOver() {
+        return (getWinner() != null) && (getOutcome() != null);
     }
 
     /* Other methods */
@@ -134,27 +138,51 @@ public class ChessGame {
     }
 
     public void addMove(ChessMove move) throws IllegalMoveException {
-        // Auto-set move details if needed
-        if (move.getPiece() == null) {
-            move.setPiece(getBoard().get(move.getOrigin().getRow(), move.getOrigin().getCol()));
-        }
 
-        // TODO: melhorar estas mensagens
+        // If game isn't over yet!
 
-        // Se for o jogador correto a jogar
-        if ((getTurn() == Color.WHITE && move.getAuthor() == white) ||
-                (getTurn() == Color.BLACK && move.getAuthor() == black)) {
+        if (getOutcome() == null) {
+            // Auto-set move details if needed
+            if (move.getPiece() == null) {
+                move.setPiece(getBoard().get(move.getOrigin().getRow(), move.getOrigin().getCol()));
+            }
+            // If specified piece is different from piece on board
+            else if (!move.getPiece().equals(getBoard().get(move.getOrigin().getRow(), move.getOrigin().getCol()))) {
+                throw new IllegalMoveException("A peça especificada é inválida!");
+            }
 
-            // Se o jogador estiver a jogar com as peças de cor correta
-            if (move.getPiece().getColor() == getTurn()){
-                getBoard().update(move);
-                moves.add(move);
+            // Se for o jogador correto a jogar
+            if ((getTurn() == Color.WHITE && move.getAuthor() == white) ||
+                    (getTurn() == Color.BLACK && move.getAuthor() == black)) {
+
+                // Se o jogador estiver a jogar com as peças de cor correta
+                if (move.getPiece().getColor() == getTurn()){
+                    getBoard().update(move);
+
+                    // Set game-ending details
+                    // Check if move resulted in checkmate
+                    if (Validation.isCheckmate(getBoard(), getTurn().opposite)) {
+                        move.setCheckmate();
+                        setWinner(getTurn());
+                        setOutcome(Outcome.CHECKMATE);
+                    } else if (Validation.isStalemate(getBoard(), getTurn().opposite)) {
+                        setOutcome(Outcome.STALEMATE);
+                    }
+
+                    // Add to move list
+                    System.out.println(move);
+                    moves.add(move);
+
+                } else {
+                    throw new IllegalMoveException("Jogador a jogar peça de cor errada!");
+                }
             } else {
-                throw new IllegalMoveException("Jogador a jogar peça de cor errada!");
+                throw new IllegalMoveException("Jogador a jogar na vez errada!");
             }
         } else {
-            throw new IllegalMoveException("Jogador a jogar na vez errada!");
+            throw new IllegalMoveException("O jogo já terminou!");
         }
+
     }
 
     public String totalTime(Color c) {

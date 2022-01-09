@@ -7,6 +7,7 @@ import persist.ChessPlayerDM;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import java.io.FilterOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -114,12 +115,12 @@ public class TestChessBookDB {
         testMoves.add(move4w);
         testMoves.add(move4b);
 
-
         for (ChessMove move : testMoves) {
 
                 // Adding move to game
             try {
                 testGame.addMove(move);
+
             } catch (IllegalMoveException e) {
                 e.printStackTrace();
             }
@@ -149,8 +150,6 @@ public class TestChessBookDB {
 
         cgdm.update(testGame);
 
-//        System.out.println(testGame.getBoard());
-
         assertSame(Validation.isCheck(testGame.getBoard(), Color.BLACK), true);
     }
 
@@ -160,14 +159,91 @@ public class TestChessBookDB {
     void testIllegalMove() {
         ChessGame testGame = cgdm.findByPlayerName("CLU").get(0);
 
-        System.out.println(Validation.getLegalMovesAmount(testGame.getBoard(), Color.BLACK));
-        System.out.println(testGame.getBoard());
-
-        //D6 - Jogada inválida, pois é necessário sair do cheque
+        // D6 - Jogada inválida, pois é necessário sair do cheque
         ChessMove move5b = new ChessMove(testGame.getBlack(), new ChessPosition(6,3), new ChessPosition(5,3));
 
-
         assertThrows(IllegalMoveException.class, () -> testGame.addMove(move5b));
+
+        // Nesta posição apenas se poderão jogar 3 jogadas: Ke7, Kf8 ou g6
+        assertEquals(3, Validation.getLegalMovesAmount(testGame.getBoard(), Color.BLACK));
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Checkmate Continuance Test")
+    void testCheckmate() {
+
+        ChessGame testGame = cgdm.findByPlayerEmail("flynn@encom.com").get(0);
+        ChessPlayer flynn = testGame.getWhite();
+        ChessPlayer clu = testGame.getBlack();
+
+        // Game continuance, checkmate detection
+        // g6
+        ChessMove move5b = new ChessMove(clu, new ChessPosition(6, 6), new ChessPosition(5,6));
+
+        // Nxg6
+        ChessMove move6w = new ChessMove(flynn, new ChessPosition(4, 4), new ChessPosition(5,6));
+
+        // hxg6
+        ChessMove move6b = new ChessMove(clu, new ChessPosition(6, 7), new ChessPosition(5,6));
+
+        // Qxh8
+        ChessMove move7w = new ChessMove(flynn, new ChessPosition(4, 7), new ChessPosition(7,7));
+
+        // Bf8
+        ChessMove move7b = new ChessMove(clu, new ChessPosition(4, 2), new ChessPosition(7,5));
+
+        // Qxg8
+        ChessMove move8w = new ChessMove(flynn, new ChessPosition(7, 7), new ChessPosition(7,6));
+
+        // d6
+        ChessMove move8b = new ChessMove(clu, new ChessPosition(6, 3), new ChessPosition(5,3));
+
+        // Qf7#
+        ChessMove move9w = new ChessMove(flynn, new ChessPosition(7, 6), new ChessPosition(6,5));
+
+        // loop and list for efficiency and testing purposes only
+        List<ChessMove> testMoves = new ArrayList<ChessMove>();
+        testMoves.add(move5b);
+        testMoves.add(move6w);
+        testMoves.add(move6b);
+        testMoves.add(move7w);
+        testMoves.add(move7b);
+        testMoves.add(move8w);
+        testMoves.add(move8b);
+        testMoves.add(move9w);
+
+        for (ChessMove move : testMoves) {
+
+            // Adding move to game
+            try {
+                testGame.addMove(move);
+
+                // Persisting on every move
+                cgdm.update(testGame);
+
+            } catch (IllegalMoveException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        assertTrue(Validation.isCheckmate(testGame.getBoard(), Color.BLACK));
+        assertEquals(Color.WHITE, testGame.getWinner());
+        assertEquals(Outcome.CHECKMATE, testGame.getOutcome());
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("Adding move after ending test")
+    void testAddMoveAfterEnding() {
+        ChessGame testGame = cgdm.findByPlayerEmail("flynn@encom.com").get(0);
+        ChessPlayer flynn = testGame.getWhite();
+
+        ChessMove move10w = new ChessMove(flynn, new ChessPosition(4, 4), new ChessPosition(5,6));
+
+        assertTrue(testGame.isOver());
+        assertThrows(IllegalMoveException.class, () -> testGame.addMove(move10w));
     }
 
 }

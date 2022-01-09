@@ -2,7 +2,6 @@ package domain;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
-import java.util.Objects;
 
 @Embeddable
 public class ChessPiece implements Serializable {

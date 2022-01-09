@@ -108,10 +108,10 @@ public class Validation {
 
     private static boolean checkRookValidity(int x1, int y1, int x2, int y2, ChessBoard board){
             // horizontal move
-            if (x2 != x1 && y2 == y1){
+            if (x2 != x1 && y2 == y1) {
                 // moving right
                 if (x2 > x1) {
-                    for (int i = x1; i < x2; i++) {
+                    for (int i = x1 + 1; i < x2; i++) {
                         if (!(board.isEmpty(y1, i))) {
                             ChessPiece pieceOnTheWay = board.get(y1, i);
                             if (pieceOnTheWay.getChessPieceKind() != ChessPieceKind.KING) {
@@ -122,7 +122,7 @@ public class Validation {
                 }
                 // moving left
                 else {
-                    for (int i = x2; i < x1; i++){
+                    for (int i = x1 - 1; i > x2; i--){
                         if (!(board.isEmpty(y1, i))) {
                             ChessPiece pieceOnTheWay = board.get(y1, i);
                             if (pieceOnTheWay.getChessPieceKind() != ChessPieceKind.KING) {
@@ -131,12 +131,13 @@ public class Validation {
                         }
                     }
                 }
+                return true;
             }
             // vertical move
-            else {
+            else if (x2 == x1 && y2 != y1) {
                 // moving up
                 if (y2 > y1){
-                    for (int i = y1; i < y2; i++){
+                    for (int i = y1 + 1; i < y2; i++){
                         if (!(board.isEmpty(i, x1))) {
                             return false;
                         }
@@ -144,14 +145,15 @@ public class Validation {
                 }
                 // moving down
                 else {
-                    for (int i = y2; i < y1; i++){
+                    for (int i = y1 - 1; i > y2; i--){
                         if (!(board.isEmpty(i, x1))) {
                             return false;
                         }
                     }
                 }
+                return true;
             }
-        return true;
+        return false;
     }
 
     private static boolean checkPawnValidity(int x1, int y1, int x2, int y2, ChessBoard board, ChessMove move) {
@@ -220,7 +222,11 @@ public class Validation {
                     }
                     break;
                 case QUEEN:
-                    if ((checkRookValidity(x1, y1, x2, y2, board) || checkBishopValidity(x1, y1, x2, y2, board))) {
+                    boolean validRookMove = checkRookValidity(x1, y1, x2, y2, board);
+                    boolean validBishopMove = checkBishopValidity(x1, y1, x2, y2, board);
+
+                    // A queen move is either a valid rook move or a valid bishop move
+                    if (validRookMove || validBishopMove) {
                         return true;
                     }
                     break;
@@ -301,8 +307,14 @@ public class Validation {
             }
         }
 
-        System.out.println(moveList);
-
         return counter;
+    }
+
+    public static boolean isCheckmate(ChessBoard board, Color teamColor) {
+        return getLegalMovesAmount(board, teamColor) == 0 && isCheck(board, teamColor);
+    }
+
+    public static boolean isStalemate(ChessBoard board, Color teamColor) {
+        return getLegalMovesAmount(board, teamColor) == 0 && !isCheck(board, teamColor);
     }
 }

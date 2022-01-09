@@ -50,6 +50,10 @@ public class ChessMove {
     @Embedded
     private ChessPiece piece;
 
+    private boolean isCheck;
+
+    private boolean isCheckmate;
+
     public ChessMove() {
     }
 
@@ -103,6 +107,14 @@ public class ChessMove {
         this.promotion = promotion;
     }
 
+    public void setCheck() {
+        this.isCheck = true;
+    }
+
+    public void setCheckmate() {
+        this.isCheckmate = true;
+    }
+
 
     /* Getters */
 
@@ -136,6 +148,11 @@ public class ChessMove {
         return promotion;
     }
 
+    public boolean getCheck() {return isCheck;}
+
+    public boolean getCheckmate() {return isCheckmate;}
+
+
 
     public boolean equals(ChessMove other) {
         if (this == other) return true;
@@ -153,13 +170,23 @@ public class ChessMove {
     // Adicionar notação caso check ou checkmate
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(piece);
+
+        if ((piece != null) && (piece.getChessPieceKind() != ChessPieceKind.PAWN)) {
+            sb.append(piece);
+        }
 
         if (getCapture() != null) {
             sb.append("x");
         }
 
         sb.append(to);
+
+        if (getCheckmate()) {
+            sb.append("#");
+        }
+        else if (getCheck()) {
+            sb.append("+");
+        }
 
         return sb.toString();
     }
