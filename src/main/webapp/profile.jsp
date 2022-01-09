@@ -6,7 +6,6 @@
 <%@ page import="domain.ChessGame" %>
 <%@ page import="java.util.List" %>
 <%@ page import="domain.Color" %>
-<c:set var="chessGameList" value="${cgdm.findByPlayerEmail(user.getEmail())}" scope="page"/>
 <% List<ChessGame> chessGameList = cgdm.findByPlayerEmail(user.getEmail()); %>
 <html>
     <head>
@@ -33,7 +32,7 @@
             <% for(int i = 0; i < chessGameList.size(); i++) {
                 ChessGame game = chessGameList.get(i);%>
                 <tr>
-                    <td><%=i%></td>
+                    <td><%=i+1%></td>
                     <td><%=game.getWhite().getName()%></td>
                     <td><%=game.totalTime(Color.WHITE)%></td>
                     <td><%=game.getBlack().getName()%></td>
@@ -51,7 +50,7 @@
                     <% } else { %>
                     <td><%=game.getOutcome()%></td>
                     <td>
-                        <form method="get" action="findOpponent.jsp">
+                        <form method="get" action="processPlay.jsp">
                             <%if(game.getWhite().getName().equals(user.getName())) {%>
                             <input type="hidden" name="name" value="<%=game.getBlack().getName()%>">
                             <%} else {%>
@@ -67,7 +66,7 @@
         </table>
     <% } %>
     <h2>Start a new game</h2>
-    <form method="GET" action="findOpponent.jsp">
+    <form method="GET" action="processPlay.jsp">
         Enter the name of your opponent:<br>
         <label for="inputName">Name: </label>
         <input type="text" name="name" id="inputName">

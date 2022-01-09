@@ -1,3 +1,4 @@
+<%@ page import="domain.ChessPlayer" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="cpdm" class="persist.ChessPlayerDM" scope="session"/>
@@ -23,9 +24,11 @@
         </html>
     </c:when>
     <c:otherwise>
+        <% ChessPlayer userFound = cpdm.findByEmail(request.getParameter("email")).get(); %>
         <jsp:useBean id="user" class="domain.ChessPlayer" scope="session">
-            <jsp:setProperty name="user" property="*"/>
+            <jsp:setProperty name="user" property="name" value="<%=userFound.getName()%>"/>
+            <jsp:setProperty name="user" property="email" value="<%=userFound.getEmail()%>"/>
         </jsp:useBean>
-        <jsp:forward page="index.jsp"/>
+        <%response.sendRedirect(request.getContextPath() + "/index.jsp");%>
     </c:otherwise>
 </c:choose>
