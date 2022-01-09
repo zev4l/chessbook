@@ -1,5 +1,6 @@
 package domain;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class ChessBoard {
@@ -8,9 +9,6 @@ public class ChessBoard {
     public ChessBoard() {
         resetBoard();
     }
-
-    // TODO: Implementar addMove, reconstrução a partir de lista de moves e verificação de jogada legal para cada peça
-    //  requirida
 
     public ChessPiece get(int row, int col) {
         return this.board[row][col];
@@ -89,6 +87,20 @@ public class ChessBoard {
         }
     }
 
+    // ONLY PROVIDE LAST MOVE, USED FOR VALIDITY CHECKING ONLY
+    public void undoMove(ChessMove move) {
+        if (move.getCapture() != null) {
+            // Revert captured piece
+            set(move.getDestination().getRow(), move.getDestination().getCol(), move.getCapture());
+        } else {
+            // Set destination back to null
+            set(move.getDestination().getRow(), move.getDestination().getCol(), null);
+        }
+
+        // Set moved piece back in place
+        set(move.getOrigin().getRow(), move.getOrigin().getCol(), move.getPiece());
+    }
+
     public void rebuildBoard(List<ChessMove> moves) {
         resetBoard();
         for (ChessMove move : moves) {
@@ -121,6 +133,23 @@ public class ChessBoard {
 
     public boolean checkValidity(ChessMove move) {
         return Validation.checkValidity(move, this);
+    }
+
+    public HashMap<ChessPiece, ChessPosition> getAllTeamPieces(Color teamColor) {
+        HashMap<ChessPiece, ChessPosition> teamPieces = new HashMap<ChessPiece, ChessPosition>();
+
+        // Find all attacking pieces
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                if (!isEmpty(y, x)) {
+                    if (get(y, x).getColor() == teamColor) {
+                        teamPieces.put(get(y, x), new ChessPosition(y, x));
+                    }
+                }
+            }
+        }
+
+        return teamPieces;
     }
 
     public boolean isEmpty(int row, int col){

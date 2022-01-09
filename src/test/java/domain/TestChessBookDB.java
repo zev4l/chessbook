@@ -149,7 +149,7 @@ public class TestChessBookDB {
 
         cgdm.update(testGame);
 
-        System.out.println(testGame.getBoard());
+//        System.out.println(testGame.getBoard());
 
         assertSame(Validation.isCheck(testGame.getBoard(), Color.BLACK), true);
     }
@@ -160,10 +160,14 @@ public class TestChessBookDB {
     void testIllegalMove() {
         ChessGame testGame = cgdm.findByPlayerName("CLU").get(0);
 
+        System.out.println(Validation.getLegalMovesAmount(testGame.getBoard(), Color.BLACK));
+        System.out.println(testGame.getBoard());
+
         //D6 - Jogada inválida, pois é necessário sair do cheque
         ChessMove move5b = new ChessMove(testGame.getBlack(), new ChessPosition(6,3), new ChessPosition(5,3));
 
-        Throwable exception = assertThrows(IllegalMoveException.class, () -> testGame.addMove(move5b));
+
+        assertThrows(IllegalMoveException.class, () -> testGame.addMove(move5b));
     }
 
 }

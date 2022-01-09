@@ -147,20 +147,6 @@ public class ChessGame {
 
             // Se o jogador estiver a jogar com as peças de cor correta
             if (move.getPiece().getColor() == getTurn()){
-
-                // Caso o jogador já esteja em check
-                if (Validation.isCheck(getBoard(), getTurn())) {
-
-                    // Verificar se o novo move continuaria a causar check
-                    getBoard().update(move);
-
-                    if (Validation.isCheck(getBoard(), getTurn())) {
-                        getBoard().rebuildBoard(getMoves());
-                        throw new IllegalMoveException("O jogador está em cheque, terá que fazer uma jogada que saia de check!");
-                    }
-
-                }
-                // Caso contrário, adicionar a jogada à lista de jogadas
                 getBoard().update(move);
                 moves.add(move);
             } else {

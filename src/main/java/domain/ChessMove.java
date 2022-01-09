@@ -68,6 +68,13 @@ public class ChessMove {
         this.to = to;
     }
 
+    // Construtor para validações temporárias
+    public ChessMove(ChessPosition from, ChessPosition to, ChessPiece piece) {
+        this.piece = piece;
+        this.from = from;
+        this.to = to;
+    }
+
     /* Setters */
 
     public void setOrigin(ChessPosition from) {
