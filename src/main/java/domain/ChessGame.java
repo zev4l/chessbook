@@ -121,7 +121,7 @@ public class ChessGame {
     }
 
     public boolean isOver() {
-        return (getWinner() != null) && (getOutcome() != null);
+        return getOutcome() != null;
     }
 
     /* Other methods */
@@ -141,7 +141,7 @@ public class ChessGame {
 
         // If game isn't over yet!
 
-        if (getOutcome() == null) {
+        if (!isOver()) {
             // Auto-set move details if needed
             if (move.getPiece() == null) {
                 move.setPiece(getBoard().get(move.getOrigin().getRow(), move.getOrigin().getCol()));
