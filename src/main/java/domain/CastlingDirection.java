@@ -1,6 +1,6 @@
 package domain;
 
-public enum CastleDirection {
-    LEFT,
-    RIGHT
+public enum CastlingDirection {
+    KING_SIDE,
+    QUEEN_SIDE
 }
