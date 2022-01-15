@@ -94,7 +94,7 @@ public class ChessBoard {
 
     // ONLY PROVIDE LAST MOVE, USED FOR VALIDITY CHECKING ONLY
     public void undoMove(ChessMove move) {
-        if (move.getCapture() != null) {
+        if (move.isCapture()) {
             // Revert captured piece
             set(move.getDestination().getRow(), move.getDestination().getCol(), move.getCapture());
         } else {

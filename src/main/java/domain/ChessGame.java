@@ -44,6 +44,9 @@ public class ChessGame {
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastMoveTimestamp;
+
     public ChessGame() {
     }
 
@@ -81,6 +84,10 @@ public class ChessGame {
         this.timestamp = timestamp;
     }
 
+    public void setLastMoveTimestamp(Date timestamp) {
+        this.lastMoveTimestamp = timestamp;
+    }
+
     /* Getters */
 
     public int getId() {
@@ -106,6 +113,10 @@ public class ChessGame {
         }
 
         return board;
+    }
+
+    public Date getLastMoveTimestamp() {
+        return lastMoveTimestamp;
     }
 
     public Color getWinner() {
