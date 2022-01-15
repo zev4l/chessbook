@@ -54,6 +54,8 @@ public class ChessMove {
 
     private boolean isCheckmate;
 
+    private CastlingDirection castlingDirection;
+
     public ChessMove() {
     }
 
@@ -115,6 +117,8 @@ public class ChessMove {
         this.isCheckmate = true;
     }
 
+    public void setCastling(CastlingDirection direction) {this.castlingDirection = direction;}
+
 
     /* Getters */
 
@@ -148,9 +152,16 @@ public class ChessMove {
         return promotion;
     }
 
-    public boolean getCheck() {return isCheck;}
+    public CastlingDirection getCastling() {return castlingDirection;}
 
-    public boolean getCheckmate() {return isCheckmate;}
+    public boolean isCheck() {return isCheck;}
+
+    public boolean isCheckmate() {return isCheckmate;}
+
+    public boolean isCapture() {return getCapture() != null;}
+
+    public boolean isPromotion() {return getPromotion() != null;}
+
 
 
 
@@ -171,20 +182,27 @@ public class ChessMove {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        if ((piece != null) && (piece.getChessPieceKind() != ChessPieceKind.PAWN)) {
-            sb.append(piece);
+        if (piece != null) {
+            if (piece.getChessPieceKind() != ChessPieceKind.PAWN) {
+                sb.append(piece);
+
+            } else {
+                if (isCapture()) {
+                    sb.append((char) ('a' + getOrigin().getCol()));
+                }
+            }
         }
 
-        if (getCapture() != null) {
+        if (isCapture()) {
             sb.append("x");
         }
 
         sb.append(to);
 
-        if (getCheckmate()) {
+        if (isCheckmate()) {
             sb.append("#");
         }
-        else if (getCheck()) {
+        else if (isCheck()) {
             sb.append("+");
         }
 
