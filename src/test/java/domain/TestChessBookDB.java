@@ -135,15 +135,40 @@ public class TestChessBookDB {
 
     @Test
     @Order(4)
+    @DisplayName("King-Side Castling Test")
+    void testKingSideCastling() {
+        ChessGame testGame = cgdm.findByPlayerEmail("flynn@encom.com").get(0);
+
+        // O-O
+        ChessMove move5w = new ChessMove(testGame.getWhite(), new ChessPosition(0,4), new ChessPosition(0,6));
+        move5w.setCastling(CastlingDirection.KING_SIDE);
+
+        try {
+            testGame.addMove(move5w);
+        } catch (IllegalMoveException e) {
+            e.printStackTrace();
+        }
+
+        cgdm.update(testGame);
+
+        assertTrue(testGame.getBoard().get(0, 6).equals(new ChessPiece(ChessPieceKind.KING, Color.WHITE)));
+    }
+
+    @Test
+    @Order(5)
     @DisplayName("Check Test")
     void testCheck() {
         ChessGame testGame = cgdm.findByPlayerEmail("flynn@encom.com").get(0);
 
-        //Qh5
-        ChessMove move5w = new ChessMove(testGame.getWhite(), new ChessPosition(0,3), new ChessPosition(4,7));
+        // a6
+        ChessMove move5b = new ChessMove(testGame.getBlack(), new ChessPosition(6,0), new ChessPosition(5,0));
+
+        // Qh5
+        ChessMove move6w = new ChessMove(testGame.getWhite(), new ChessPosition(0,3), new ChessPosition(4,7));
 
         try {
-            testGame.addMove(move5w);
+            testGame.addMove(move5b);
+            testGame.addMove(move6w);
         } catch (IllegalMoveException e) {
             e.printStackTrace();
         }
@@ -154,22 +179,22 @@ public class TestChessBookDB {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     @DisplayName("Illegal Move Test")
     void testIllegalMove() {
         ChessGame testGame = cgdm.findByPlayerName("CLU").get(0);
 
         // D6 - Jogada inválida, pois é necessário sair do cheque
-        ChessMove move5b = new ChessMove(testGame.getBlack(), new ChessPosition(6,3), new ChessPosition(5,3));
+        ChessMove move6b = new ChessMove(testGame.getBlack(), new ChessPosition(6,3), new ChessPosition(5,3));
 
-        assertThrows(IllegalMoveException.class, () -> testGame.addMove(move5b));
+        assertThrows(IllegalMoveException.class, () -> testGame.addMove(move6b));
 
         // Nesta posição apenas se poderão jogar 3 jogadas: Ke7, Kf8 ou g6
-        assertEquals(3, Validation.getLegalMovesAmount(testGame.getBoard(), Color.BLACK));
+        assertEquals(3, Validation.getLegalMovesAmount(testGame.getBoard(), Color.BLACK, testGame));
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     @DisplayName("Checkmate Continuance Test")
     void testCheckmate() {
 
@@ -179,39 +204,39 @@ public class TestChessBookDB {
 
         // Game continuance, checkmate detection
         // g6
-        ChessMove move5b = new ChessMove(clu, new ChessPosition(6, 6), new ChessPosition(5,6));
+        ChessMove move6b = new ChessMove(clu, new ChessPosition(6, 6), new ChessPosition(5,6));
 
         // Nxg6
-        ChessMove move6w = new ChessMove(flynn, new ChessPosition(4, 4), new ChessPosition(5,6));
+        ChessMove move7w = new ChessMove(flynn, new ChessPosition(4, 4), new ChessPosition(5,6));
 
         // hxg6
-        ChessMove move6b = new ChessMove(clu, new ChessPosition(6, 7), new ChessPosition(5,6));
+        ChessMove move7b = new ChessMove(clu, new ChessPosition(6, 7), new ChessPosition(5,6));
 
         // Qxh8
-        ChessMove move7w = new ChessMove(flynn, new ChessPosition(4, 7), new ChessPosition(7,7));
+        ChessMove move8w = new ChessMove(flynn, new ChessPosition(4, 7), new ChessPosition(7,7));
 
         // Bf8
-        ChessMove move7b = new ChessMove(clu, new ChessPosition(4, 2), new ChessPosition(7,5));
+        ChessMove move8b = new ChessMove(clu, new ChessPosition(4, 2), new ChessPosition(7,5));
 
         // Qxg8
-        ChessMove move8w = new ChessMove(flynn, new ChessPosition(7, 7), new ChessPosition(7,6));
+        ChessMove move9w = new ChessMove(flynn, new ChessPosition(7, 7), new ChessPosition(7,6));
 
         // d6
-        ChessMove move8b = new ChessMove(clu, new ChessPosition(6, 3), new ChessPosition(5,3));
+        ChessMove move9b = new ChessMove(clu, new ChessPosition(6, 3), new ChessPosition(5,3));
 
         // Qf7#
-        ChessMove move9w = new ChessMove(flynn, new ChessPosition(7, 6), new ChessPosition(6,5));
+        ChessMove move10w = new ChessMove(flynn, new ChessPosition(7, 6), new ChessPosition(6,5));
 
         // loop and list for efficiency and testing purposes only
         List<ChessMove> testMoves = new ArrayList<ChessMove>();
-        testMoves.add(move5b);
-        testMoves.add(move6w);
         testMoves.add(move6b);
         testMoves.add(move7w);
         testMoves.add(move7b);
         testMoves.add(move8w);
         testMoves.add(move8b);
         testMoves.add(move9w);
+        testMoves.add(move9b);
+        testMoves.add(move10w);
 
         for (ChessMove move : testMoves) {
 
@@ -228,13 +253,15 @@ public class TestChessBookDB {
 
         }
 
-        assertTrue(Validation.isCheckmate(testGame.getBoard(), Color.BLACK));
+        System.out.println(testGame.getBoard());
+
+        assertTrue(Validation.isCheckmate(testGame.getBoard(), Color.BLACK, testGame));
         assertEquals(Color.WHITE, testGame.getWinner());
         assertEquals(Outcome.CHECKMATE, testGame.getOutcome());
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     @DisplayName("Adding move after ending test")
     void testAddMoveAfterEnding() {
         ChessGame testGame = cgdm.findByPlayerEmail("flynn@encom.com").get(0);

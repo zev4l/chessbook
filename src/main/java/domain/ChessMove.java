@@ -40,12 +40,7 @@ public class ChessMove {
     @Embedded
     private ChessPiece capture = null;
 
-    @AttributeOverrides({
-            @AttributeOverride(name="color",column=@Column(name="promotionType")),
-            @AttributeOverride(name="type",column=@Column(name="promotionColor"))
-    })
-    @Embedded
-    private ChessPiece promotion = null;
+    private ChessPieceKind promotion = null;
 
     @Embedded
     private ChessPiece piece;
@@ -105,7 +100,7 @@ public class ChessMove {
 
     public void setAuthor(ChessPlayer player) {this.author = player;}
 
-    public void setPromotion(ChessPiece promotion) {
+    public void setPromotion(ChessPieceKind promotion) {
         this.promotion = promotion;
     }
 
@@ -148,7 +143,7 @@ public class ChessMove {
 
     public ChessPlayer getAuthor() {return author;}
 
-    public ChessPiece getPromotion() {
+    public ChessPieceKind getPromotion() {
         return promotion;
     }
 
@@ -161,6 +156,8 @@ public class ChessMove {
     public boolean isCapture() {return getCapture() != null;}
 
     public boolean isPromotion() {return getPromotion() != null;}
+
+    public boolean isCastling() {return getCastling() != null;}
 
 
 
@@ -180,6 +177,14 @@ public class ChessMove {
     // TODO: toString Temporário (igualar a notação algébrica)
     // Adicionar notação caso check ou checkmate
     public String toString() {
+
+        if (getCastling() == CastlingDirection.KING_SIDE) {
+            return "O-O";
+        }
+        if (getCastling() == CastlingDirection.QUEEN_SIDE) {
+            return "O-O-O";
+        }
+
         StringBuilder sb = new StringBuilder();
 
         if (piece != null) {
