@@ -29,7 +29,6 @@
 </p>
 
 <div class="chessboard">
-<% List<ChessPiece> pieces = game.getBoard().%>
 </div>
 
 <pre><%=game.getBoard().toString()%></pre>
