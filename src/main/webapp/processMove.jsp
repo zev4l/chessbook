@@ -11,16 +11,34 @@
     try {
     
         String[] moveInput = request.getParameter("move").split(" ",0);
-        char[] origin = moveInput[0].toCharArray();
-        int originX = (int) origin[0] - (int) 'a';
-        int originY = Character.getNumericValue(origin[1]) - 1;
-        char[] destination = moveInput[1].toCharArray();
-        int destinationX = (int) destination[0] - (int) 'a';
-        int destinationY = Character.getNumericValue(destination[1]) - 1;
-    
-    ChessMove move = new ChessMove(("WHITE".equals(request.getParameter("team")) ? game.getWhite() : game.getBlack()),
-            new ChessPosition(originY, originX), new ChessPosition(destinationY, destinationX));
-    game.addMove(move);
+
+        if (Objects.equals(moveInput[0], "castle")) {
+            int kingY = "WHITE".equals(request.getParameter("team")) ? 0 : 7;
+
+            if (Objects.equals(moveInput[1], "long")) {
+                ChessMove move = new ChessMove(("WHITE".equals(request.getParameter("team")) ? game.getWhite() : game.getBlack()),
+                        new ChessPosition(kingY, 4), new ChessPosition(kingY, 2));
+                move.setCastling(CastlingDirection.QUEEN_SIDE);
+                game.addMove(move);
+            } else if (Objects.equals(moveInput[1], "short")) {
+                ChessMove move = new ChessMove(("WHITE".equals(request.getParameter("team")) ? game.getWhite() : game.getBlack()),
+                        new ChessPosition(kingY, 4), new ChessPosition(kingY, 6));
+                move.setCastling(CastlingDirection.KING_SIDE);
+                game.addMove(move);
+            }
+        } else {
+            char[] origin = moveInput[0].toCharArray();
+            int originX = (int) origin[0] - (int) 'a';
+            int originY = Character.getNumericValue(origin[1]) - 1;
+            char[] destination = moveInput[1].toCharArray();
+            int destinationX = (int) destination[0] - (int) 'a';
+            int destinationY = Character.getNumericValue(destination[1]) - 1;
+
+            ChessMove move = new ChessMove(("WHITE".equals(request.getParameter("team")) ? game.getWhite() : game.getBlack()),
+                    new ChessPosition(originY, originX), new ChessPosition(destinationY, destinationX));
+            game.addMove(move);
+        }
+
     cgdm.update(game);
     response.sendRedirect(request.getContextPath() + "/game.jsp?id=" + game.getId());
     
