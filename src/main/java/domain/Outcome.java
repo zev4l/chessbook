@@ -6,7 +6,7 @@ public enum Outcome {
     TIMEOUT,
     // Draw
     STALEMATE,
-    MATERIAL,
+    INSUFFICIENT_MATERIAL,
     MOVE_LIMIT,
     REPETITION,
     AGREEMENT

@@ -2,12 +2,14 @@ package domain;
 
 import javax.persistence.*;
 
+import java.util.Date;
 import java.util.Objects;
 
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 public class ChessMove {
+    @Column(updatable = false)
     @Id @GeneratedValue(strategy=AUTO)
     private int id;
 
@@ -50,6 +52,17 @@ public class ChessMove {
     private boolean isCheckmate;
 
     private CastlingDirection castlingDirection;
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date timestamp;
 
     public ChessMove() {
     }

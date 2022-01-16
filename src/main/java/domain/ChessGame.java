@@ -174,13 +174,19 @@ public class ChessGame {
                     getBoard().update(move, this);
 
                     // Set game-ending details
-                    // Check if move resulted in checkmate
+                    // Check if move resulted in checkmate, stalemate, 50 move rule ending, insufficient material or repetition
                     if (Validation.isCheckmate(getBoard(), getTurn().opposite, this)) {
                         move.setCheckmate();
                         setWinner(getTurn());
                         setOutcome(Outcome.CHECKMATE);
                     } else if (Validation.isStalemate(getBoard(), getTurn().opposite, this)) {
                         setOutcome(Outcome.STALEMATE);
+                    } else if (Validation.isMoveLimitEnding(getMoves())) {
+                        setOutcome(Outcome.MOVE_LIMIT);
+                    } else if (Validation.isInsufficientMaterialEnding(getBoard())) {
+                        setOutcome(Outcome.INSUFFICIENT_MATERIAL);
+                    } else if (Validation.isRepetitionEnding(getMoves())) {
+                        setOutcome(Outcome.MOVE_LIMIT);
                     }
 
                     // Add to move list

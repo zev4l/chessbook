@@ -2,6 +2,9 @@ package domain;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public class Validation {
 
@@ -380,5 +383,52 @@ public class Validation {
 
     public static boolean isStalemate(ChessBoard board, Color teamColor, ChessGame game) {
         return getLegalMovesAmount(board, teamColor, game) == 0 && !isCheck(board, teamColor);
+    }
+
+    public static boolean isMoveLimitEnding(List<ChessMove> moves) {
+        // If the last 50 moves don't include a pawn move or a capture
+
+        // moves.size() - i < 100 because 1 move means White and Black's move, therefore 2 ChessMove objects
+        // (e.g. a game's first ChessMove is white's first move, the second ChessMove is black's
+        // first move, and in chess terms, those two moves compose the first move, i.e. "1. xy xy")
+
+        if (!moves.isEmpty()) {
+            for (int i = moves.size() - 1; moves.size() - i < 100 && i >= 0; i--) {
+                ChessMove move = moves.get(i);
+                if (move.getPiece().getChessPieceKind() == ChessPieceKind.PAWN ||
+                        move.isCapture()) {
+                    return false;
+                }
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isInsufficientMaterialEnding(ChessBoard board) {
+
+        Set<ChessPiece> whitePieces = board.getAllTeamPieces(Color.WHITE).keySet();
+        Set<ChessPiece> blackPieces = board.getAllTeamPieces(Color.BLACK).keySet();
+
+
+        // TODO: Terminar
+        // This only happens if there are no pawns on the board
+        if (Stream.concat(whitePieces.stream(), blackPieces.stream()).anyMatch(o -> o.getChessPieceKind() == ChessPieceKind.PAWN)) {
+            // If only two kings
+            if ((whitePieces.size() == 1 && whitePieces.iterator().next().getChessPieceKind() == ChessPieceKind.KING) ||
+                (blackPieces.size() == 1 && blackPieces.iterator().next().getChessPieceKind() == ChessPieceKind.KING)) {
+                return true;
+            }
+            // TODO: If kings and knights or bishops it's also valid, though not considered
+        }
+
+        return false;
+    }
+
+    public static boolean isRepetitionEnding(List<ChessMove> moves) {
+        // TODO: Implement this
+        return false;
     }
 }
