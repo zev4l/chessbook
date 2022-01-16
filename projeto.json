@@ -1,0 +1,16 @@
+{
+  "grupo" : 1,
+  "aluno1" : 55373,
+  "aluno2" : 55373,
+  "aluno3" : 0,
+  "ramo-aluno1" : "augusto",
+  "ramo-aluno2" : "ze",
+  "ramo-aluno3" : "",
+  "master@16/01" : "781249c7",
+  "aluno1@16/01" : "df528379",
+  "aluno2@16/01" : "7275ae9d",
+  "aluno3@16/01" : "",
+  "url" : "http://localhost:8080/chessbookweb-1.0-SNAPSHOT/login.jsp",
+  "master@final" : "",
+  "obs":"Devido a uma altura intensive de exames de minor, ainda não nos foi possível implementar ou terminar algumas funcionalidades que gostariamos. Mais informações disponíveis no ficheiro README.MD mais recente."
+}
