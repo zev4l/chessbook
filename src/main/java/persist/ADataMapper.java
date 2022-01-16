@@ -50,7 +50,9 @@ abstract class ADataMapper<E> implements IDataMapper<E>{
         EntityManager em = null;
         try {
             em = Main.emf.createEntityManager();
-            return Optional.of(em.find(c, id));
+            E result = em.find(c, id);
+            em.refresh(result);
+            return Optional.of(result);
         }
             //TODO: lidar com excepções
         finally {
