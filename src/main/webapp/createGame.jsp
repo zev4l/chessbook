@@ -10,10 +10,10 @@
 <%@ page import="java.util.Collections" %>
 
 <% List<ChessPlayer> chessPlayers = new ArrayList<>();
-    chessPlayers.add(user);
+    chessPlayers.add(cpdm.findByName(user.getName()).get(0));
     chessPlayers.add(cpdm.find(Integer.parseInt(request.getParameter("id"))).get());
     Collections.shuffle(chessPlayers);
     ChessGame game = new ChessGame(chessPlayers.get(0), chessPlayers.get(1), new java.util.Date());
     cgdm.insert(game);%>
 
-<%response.sendRedirect(request.getContextPath() + "/game.jsp?id=" + cgdm.findByPlayerEmail(user.getEmail()).size());
+<%response.sendRedirect(request.getContextPath() + "/game.jsp?id=" + cgdm.chessGamesList().get(cgdm.chessGamesList().size()-1).getId());%>

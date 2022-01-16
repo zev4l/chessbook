@@ -27,7 +27,7 @@
             </thead>
             <tbody>
             <% List<ChessPlayer> query = cpdm.findByName(request.getParameter("name"));
-            <% for (ChessPlayer chessPlayer : query) {%>
+            for (ChessPlayer chessPlayer : query) {%>
             <tr>
                 <td><%=chessPlayer.getName()%>
                 </td>
