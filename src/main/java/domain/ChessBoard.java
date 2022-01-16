@@ -79,7 +79,7 @@ public class ChessBoard {
                 move.setCheck();
             }
         } else {
-            throw new IllegalMoveException("Jogada inválida!");
+            throw new IllegalMoveException("Invalid move!");
         }
     }
 

@@ -157,12 +157,12 @@ public class ChessGame {
             if (move.getPiece() == null && !getBoard().isEmpty(move.getOrigin().getRow(), move.getOrigin().getCol())) {
                 move.setPiece(getBoard().get(move.getOrigin().getRow(), move.getOrigin().getCol()));
             } else {
-                throw new IllegalMoveException("Jogada inválida.");
+                throw new IllegalMoveException("Invalid Move.");
             }
 
             // If specified piece is different from piece on board
             if (!move.getPiece().equals(getBoard().get(move.getOrigin().getRow(), move.getOrigin().getCol()))) {
-                throw new IllegalMoveException("A peça especificada é inválida!");
+                throw new IllegalMoveException("The specified piece is not valid!");
             }
 
             // Se for o jogador correto a jogar
@@ -187,13 +187,13 @@ public class ChessGame {
                     moves.add(move);
 
                 } else {
-                    throw new IllegalMoveException("Jogador a jogar peça de cor errada!");
+                    throw new IllegalMoveException("Player playing wrong colored piece!");
                 }
             } else {
-                throw new IllegalMoveException("Jogador a jogar na vez errada!");
+                throw new IllegalMoveException("Player playing in wrong turn!");
             }
         } else {
-            throw new IllegalMoveException("O jogo já terminou!");
+            throw new IllegalMoveException("This game is already over");
         }
 
     }
