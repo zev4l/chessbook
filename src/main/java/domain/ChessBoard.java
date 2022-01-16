@@ -184,6 +184,17 @@ public class ChessBoard {
         return get(row, col) == null;
     }
 
+    public boolean equals(ChessBoard other) {
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++) {
+                if (!get(y, x).equals(other.get(y, x))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
