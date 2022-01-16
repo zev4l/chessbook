@@ -9,23 +9,27 @@
 <%
     ChessGame game = cgdm.find(Integer.parseInt(request.getParameter("game_id"))).get();
     try {
-    String[] moveInput = request.getParameter("move").split(" ",0);
-    char[] origin = moveInput[0].toCharArray();
-    int originX = (int) origin[0] - (int) 'a';
-    int originY = origin[1];
-    char[] destination = moveInput[1].toCharArray();
-    int destinationX = (int) destination[0] - (int) 'a';
-    int destinationY = destination[1];
+    
+        String[] moveInput = request.getParameter("move").split(" ",0);
+        char[] origin = moveInput[0].toCharArray();
+        int originX = (int) origin[0] - (int) 'a';
+        int originY = Character.getNumericValue(origin[1]) - 1;
+        char[] destination = moveInput[1].toCharArray();
+        int destinationX = (int) destination[0] - (int) 'a';
+        int destinationY = Character.getNumericValue(destination[1]) - 1;
+    
     ChessMove move = new ChessMove(("WHITE".equals(request.getParameter("team")) ? game.getWhite() : game.getBlack()),
             new ChessPosition(originY, originX), new ChessPosition(destinationY, destinationX));
     game.addMove(move);
+    cgdm.update(game);
     response.sendRedirect(request.getContextPath() + "/game.jsp?id=" + game.getId());
+    
 } catch (IllegalMoveException e){ %>
 
 <jsp:useBean id="moveerror" class="domain.MoveError" scope="request">
-    <jsp:setProperty name="moveerror" property="message" value="Jogada inválida!"/>
+    <jsp:setProperty name="moveerror" property="message" value="Invalid move!"/>
 </jsp:useBean>
+<jsp:forward page="game.jsp?id=${param.game_id}"/>
 
-<%;
-    response.sendRedirect(request.getContextPath() + "/game.jsp?id=" + game.getId());
+<%
     } %>

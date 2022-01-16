@@ -39,7 +39,7 @@
                     <td><%=game.totalTime(Color.BLACK)%></td>
                     <% if(game.getWinner() == null) {%>
                     <td><%=game.getTurn().opposite%></td>
-                    <% if(game.getWhite().getName().equals(user.getName()) && game.getTurn() == Color.WHITE) { %>
+                    <% if((game.getWhite().getName().equals(user.getName()) && game.getTurn() == Color.WHITE ) || (game.getBlack().getName().equals(user.getName()) && game.getTurn() == Color.BLACK)) { %>
                     <td><form action="game.jsp" method="get">
                         <input type="hidden" name="id" value="<%=game.getId()%>">
                         <input type="submit" value="Play">
