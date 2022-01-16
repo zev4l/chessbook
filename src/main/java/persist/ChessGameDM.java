@@ -50,7 +50,9 @@ public class ChessGameDM extends ADataMapper<ChessGame>{
             TypedQuery<ChessGame> query = em.createNamedQuery("findByPlayerName", ChessGame.class);
             query.setParameter(1, name);
             result = query.getResultList();
-
+            for(ChessGame chessGame: result){
+                em.refresh(chessGame);
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
@@ -69,6 +71,9 @@ public class ChessGameDM extends ADataMapper<ChessGame>{
             TypedQuery<ChessGame> query = em.createNamedQuery("findByPlayerEmail", ChessGame.class);
             query.setParameter(1, email);
             result = query.getResultList();
+            for(ChessGame chessGame: result){
+                em.refresh(chessGame);
+            }
 
         } catch (Exception e) {
             System.err.println(e.getMessage());
@@ -87,7 +92,9 @@ public class ChessGameDM extends ADataMapper<ChessGame>{
             em = Main.emf.createEntityManager();
             TypedQuery<ChessGame> query = em.createNamedQuery("listChessGames", ChessGame.class);
             result = query.getResultList();
-
+            for(ChessGame chessGame: result){
+                em.refresh(chessGame);
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();

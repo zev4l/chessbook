@@ -17,4 +17,4 @@
     cgdm.insert(game);
 %>
 
-<%response.sendRedirect(request.getContextPath() + "/game.jsp?id=" + cgdm.chessGamesList().get(cgdm.chessGamesList().size()-1).getId());%>
+<%response.sendRedirect(request.getContextPath() + "/game.jsp?id=" + game.getId());%>
