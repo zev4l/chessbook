@@ -168,20 +168,19 @@ public class ChessGame {
 
                 // Se o jogador estiver a jogar com as peças de cor correta
                 if (move.getPiece().getColor() == getTurn()){
-                    getBoard().update(move);
+                    getBoard().update(move, this);
 
                     // Set game-ending details
                     // Check if move resulted in checkmate
-                    if (Validation.isCheckmate(getBoard(), getTurn().opposite)) {
+                    if (Validation.isCheckmate(getBoard(), getTurn().opposite, this)) {
                         move.setCheckmate();
                         setWinner(getTurn());
                         setOutcome(Outcome.CHECKMATE);
-                    } else if (Validation.isStalemate(getBoard(), getTurn().opposite)) {
+                    } else if (Validation.isStalemate(getBoard(), getTurn().opposite, this)) {
                         setOutcome(Outcome.STALEMATE);
                     }
 
                     // Add to move list
-                    System.out.println(move);
                     moves.add(move);
 
                 } else {
@@ -208,20 +207,6 @@ public class ChessGame {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
         return sdf.format(new Date(totalSeconds * 1000));
-    }
-
-    public boolean getCastlingRights(Color c) {
-
-        // Verificar se o rei dessa cor alguma vez se mexeu
-        for (ChessMove move : getMoves()) {
-            if (move.getPiece().getChessPieceKind() == ChessPieceKind.KING && move.getPiece().getColor() == c) {
-                return false;
-            }
-        }
-
-        // TODO Verificar também se o rei, ou o quadrado por onde irá passar, está em check
-
-        return true;
     }
 
     public ChessMove getLastMove() {

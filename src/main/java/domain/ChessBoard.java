@@ -67,21 +67,12 @@ public class ChessBoard {
 
     }
 
-    public void update(ChessMove move) throws IllegalMoveException {
+    public void update(ChessMove move, ChessGame game) throws IllegalMoveException {
         ChessPosition origin = move.getOrigin();
         ChessPosition destination = move.getDestination();
 
-        if (checkValidity(move)) {
-            // In case it's a capture
-            if (isCapture(move)) {
-                move.setCapture(get(destination.getRow(), destination.getCol()));
-            }
-
-            // Set new piece at new position
-            set(destination.getRow(), destination.getCol(), move.getPiece());
-
-            // Set origin square to empty
-            set(origin.getRow(), origin.getCol(), null);
+        if (Validation.checkValidity(move, this, game)) {
+            executeMove(move);
 
             // Se causar check à equipa contrária
             if (Validation.isCheck(this, move.getPiece().getColor().opposite)) {
@@ -92,14 +83,50 @@ public class ChessBoard {
         }
     }
 
-    // ONLY PROVIDE LAST MOVE, USED FOR VALIDITY CHECKING ONLY
+    public void executeMove(ChessMove move) {
+        ChessPosition origin = move.getOrigin();
+        ChessPosition destination = move.getDestination();
+
+        if (move.isCastling()) {
+            if (move.getCastling() == CastlingDirection.QUEEN_SIDE) {
+                // Move king to C file
+                set(origin.getRow(), 2, move.getPiece());
+                remove(origin.getRow(), origin.getCol());
+
+                // Move rook to D file
+                set(origin.getRow(), 3, get(origin.getRow(), 0));
+                remove(origin.getRow(), 0);
+
+            } else if (move.getCastling() == CastlingDirection.KING_SIDE) {
+                // Move king to G file
+                set(origin.getRow(), 6, move.getPiece());
+                remove(origin.getRow(), origin.getCol());
+
+                // Move rook to F file
+                set(origin.getRow(), 5, get(origin.getRow(), 7));
+                remove(origin.getRow(), 7);
+            }
+        } else {
+            // In case it's a capture
+            if (isCapture(move)) {
+                move.setCapture(get(destination.getRow(), destination.getCol()));
+            }
+            // Set new piece at new position
+            set(destination.getRow(), destination.getCol(), move.getPiece());
+
+            // Set origin square to empty
+            remove(origin.getRow(), origin.getCol());
+        }
+    }
+
+    // ONLY PROVIDE LAST MOVE, USED FOR MOVE EMULATION AND VALIDITY CHECKING ONLY
     public void undoMove(ChessMove move) {
         if (move.isCapture()) {
             // Revert captured piece
             set(move.getDestination().getRow(), move.getDestination().getCol(), move.getCapture());
         } else {
             // Set destination back to null
-            set(move.getDestination().getRow(), move.getDestination().getCol(), null);
+            remove(move.getDestination().getRow(), move.getDestination().getCol());
         }
 
         // Set moved piece back in place
@@ -109,12 +136,12 @@ public class ChessBoard {
     public void rebuildBoard(List<ChessMove> moves) {
         resetBoard();
         for (ChessMove move : moves) {
-            try {
-                update(move);
-            } catch (IllegalMoveException e) {
-                e.printStackTrace();
-            }
+                executeMove(move);
         }
+    }
+
+    public void remove(int row, int col) {
+        set(row, col, null);
     }
 
     public boolean isCapture(ChessMove move) {
@@ -134,10 +161,6 @@ public class ChessBoard {
         return (move.getPiece().getChessPieceKind() == ChessPieceKind.PAWN)
                 && ((move.getPiece().getColor() == Color.WHITE && move.getDestination().getRow() == 7)
                 || (move.getPiece().getColor() == Color.BLACK && move.getDestination().getRow() == 0));
-    }
-
-    public boolean checkValidity(ChessMove move) {
-        return Validation.checkValidity(move, this);
     }
 
     public HashMap<ChessPiece, ChessPosition> getAllTeamPieces(Color teamColor) {
