@@ -9,7 +9,6 @@ import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 public class ChessMove {
-    @Column(updatable = false)
     @Id @GeneratedValue(strategy=AUTO)
     private int id;
 
@@ -53,16 +52,10 @@ public class ChessMove {
 
     private CastlingDirection castlingDirection;
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
-
     @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
+
+    private int idx;
 
     public ChessMove() {
     }
@@ -127,6 +120,13 @@ public class ChessMove {
 
     public void setCastling(CastlingDirection direction) {this.castlingDirection = direction;}
 
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public void setIndex(int index) {
+        this.idx = index;
+    }
 
     /* Getters */
 
@@ -172,8 +172,9 @@ public class ChessMove {
 
     public boolean isCastling() {return getCastling() != null;}
 
-
-
+    public Date getTimestamp() {
+        return timestamp;
+    }
 
     public boolean equals(ChessMove other) {
         if (this == other) return true;
