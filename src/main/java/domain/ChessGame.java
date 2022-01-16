@@ -32,7 +32,7 @@ public class ChessGame {
     private ChessPlayer black;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
-    @OrderBy("id ASC")
+    @OrderBy("idx ASC")
     private List<ChessMove> moves;
 
     @Transient
@@ -190,6 +190,8 @@ public class ChessGame {
                     }
 
                     // Add to move list
+                    move.setIndex(moves.size());
+                    move.setTimestamp(new Date());
                     moves.add(move);
 
                 } else {

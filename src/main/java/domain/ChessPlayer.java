@@ -1,6 +1,8 @@
 package domain;
 
 import javax.persistence.*;
+import java.util.Objects;
+
 import static javax.persistence.GenerationType.AUTO;
 
 @Entity
@@ -58,7 +60,7 @@ public class ChessPlayer {
     }
 
     public boolean equals(ChessPlayer other) {
-        return this.getId() == other.getId() && this.getName() == other.getName() && this.getEmail() == other.getEmail();
+        return this.getId() == other.getId() && Objects.equals(this.getName(), other.getName()) && Objects.equals(this.getEmail(), other.getEmail());
     }
 
     @Override
