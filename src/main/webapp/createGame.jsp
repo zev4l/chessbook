@@ -14,6 +14,7 @@
     chessPlayers.add(cpdm.find(Integer.parseInt(request.getParameter("id"))).get());
     Collections.shuffle(chessPlayers);
     ChessGame game = new ChessGame(chessPlayers.get(0), chessPlayers.get(1), new java.util.Date());
-    cgdm.insert(game);%>
+    cgdm.insert(game);
+%>
 
 <%response.sendRedirect(request.getContextPath() + "/game.jsp?id=" + cgdm.chessGamesList().get(cgdm.chessGamesList().size()-1).getId());%>

@@ -13,7 +13,7 @@
             </head>
             <body>
             <h1>ChessBook</h1>
-            <h2>Login Failed !</h2>
+            <h2>Login failed!</h2>
             <h3>The user ${param.email} was not found.</h3>
             <p>
             You may:<br>

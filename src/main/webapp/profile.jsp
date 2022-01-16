@@ -6,6 +6,7 @@
 <%@ page import="domain.ChessGame" %>
 <%@ page import="java.util.List" %>
 <%@ page import="domain.Color" %>
+<% cgdm = cgdm.getInstance();%>
 <% List<ChessGame> chessGameList = cgdm.findByPlayerEmail(user.getEmail()); %>
 <html>
     <head>
