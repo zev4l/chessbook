@@ -154,11 +154,14 @@ public class ChessGame {
 
         if (!isOver()) {
             // Auto-set move details if needed
-            if (move.getPiece() == null) {
+            if (move.getPiece() == null && !getBoard().isEmpty(move.getOrigin().getRow(), move.getOrigin().getCol())) {
                 move.setPiece(getBoard().get(move.getOrigin().getRow(), move.getOrigin().getCol()));
+            } else {
+                throw new IllegalMoveException("Jogada inválida.");
             }
+
             // If specified piece is different from piece on board
-            else if (!move.getPiece().equals(getBoard().get(move.getOrigin().getRow(), move.getOrigin().getCol()))) {
+            if (!move.getPiece().equals(getBoard().get(move.getOrigin().getRow(), move.getOrigin().getCol()))) {
                 throw new IllegalMoveException("A peça especificada é inválida!");
             }
 
