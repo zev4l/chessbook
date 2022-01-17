@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>ChessBook</title>
+        <link rel="stylesheet" type="text/css" href="styles/styles.css">
     </head>
     <body>
         <h1>ChessBook</h1>

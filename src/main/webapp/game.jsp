@@ -1,16 +1,21 @@
 <%@ page import="domain.ChessGame" %>
 <%@ page import="domain.Color" %>
 <%@ page import="domain.Outcome" %>
+<%@ page import="domain.ChessPiece" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="user" class="domain.ChessPlayer" scope="session"/>
 <jsp:useBean id="cpdm" class="persist.ChessPlayerDM" scope="session"/>
 <jsp:useBean id="cgdm" class="persist.ChessGameDM" scope="session"/>
 <jsp:useBean id="moveerror" class="domain.MoveError" scope="request"/>
+
 <% cgdm = cgdm.getInstance();%>
 <% ChessGame game = cgdm.find(Integer.parseInt(request.getParameter("id"))).get();%>
+
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="styles/styles.css">
     <title>ChessBook</title>
 </head>
 <body>
@@ -22,6 +27,9 @@
 <p>
     <%=game.getWhite().getName()%> (white) vs <%=game.getBlack().getName()%> (black)
 </p>
+
+<div class="chessboard">
+</div>
 
 <pre><%=game.getBoard().toString()%></pre>
 
