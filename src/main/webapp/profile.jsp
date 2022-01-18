@@ -58,12 +58,14 @@
                     <% } else { %>
                     <td><%=String.format("%s won by %s.", game.getWinner() == Color.WHITE ? game.getWhite().getName() : game.getBlack().getName(), game.getOutcome().toString().toLowerCase())%></td>
                     <td>
-                        <form method="get" action="processPlay.jsp">
+                        <form method="get" action="replay.jsp">
                             <%if(game.getWhite().getName().equals(user.getName())) {%>
                             <input type="hidden" name="name" value="<%=game.getBlack().getName()%>">
                             <%} else {%>
                             <input type="hidden" name="name" value="<%=game.getWhite().getName()%>">
                             <%}%>
+                            <input type="hidden" name="id" value="<%=game.getId()%>">
+                            <input type="hidden" name="moveIdx" value="<%=game.getMoves().size()-1%>">
                             <input type="submit" value="Replay">
                         </form>
                     </td>

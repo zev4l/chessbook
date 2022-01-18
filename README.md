@@ -34,7 +34,7 @@
   - [x] Empate por material insuficiente (rei vs. rei)
   - [x] Empate por limite de _moves [(segundo regras FIDE)](https://en.wikipedia.org/wiki/Fifty-move_rule)
 - Gestão de tempo:
-  - Ao iniciar um jogo, o tempo começará a contar apenas quando a pessoa com as peças brancas fizer a primeira jogada.
+  - Ao iniciar um jogo, o tempo começará a contar apenas quando a pessoa com as peças brancas estiver pronta para fazer a primeira jogada (estiver na página de jogo sendo a sua vez).
   - O tempo pára de contar após a jogada de um jogador, retomando quando o jogador oposto vê a jogada pela primeira vez (primeira vez que entrar no jogo após uma jogada ser feita).
     - Portanto, a seguinte situação de exemplo é possível:
       - O jogador A faz uma jogada

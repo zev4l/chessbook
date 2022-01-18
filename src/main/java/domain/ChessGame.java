@@ -148,6 +148,8 @@ public class ChessGame {
         return getOutcome() != null;
     }
 
+    public boolean hasBeenOpened() {return getFirstOpenedTimestamp() != null;}
+
     /* Other methods */
 
     public Color getTurn(){
@@ -274,7 +276,15 @@ public class ChessGame {
                 time = Duration.ZERO;
             }
         } else {
-            time = Duration.ofMinutes(getTimeControl());
+            if (hasBeenOpened() && c==getTurn()) {
+                time = Duration.ofMinutes(getTimeControl()).minus(
+                        Duration.between(
+                                getFirstOpenedTimestamp().toInstant(), new Date().toInstant())
+                );
+            } else {
+                time = Duration.ofMinutes(getTimeControl());
+            }
+
         }
 
         return time;
