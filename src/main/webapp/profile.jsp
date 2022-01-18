@@ -6,6 +6,8 @@
 <%@ page import="domain.ChessGame" %>
 <%@ page import="java.util.List" %>
 <%@ page import="domain.Color" %>
+<%@ page import="java.time.Duration" %>
+<%@ page import="java.util.Locale" %>
 <% cgdm = cgdm.getInstance();%>
 <% List<ChessGame> chessGameList = cgdm.findByPlayerEmail(user.getEmail()); %>
 <html>
@@ -32,14 +34,18 @@
             </thead>
             <tbody>
             <% for(int i = 0; i < chessGameList.size(); i++) {
-                ChessGame game = chessGameList.get(i);%>
+                ChessGame game = chessGameList.get(i);
+                Duration whiteTimeLeft = game.getTotalTimeLeft(Color.WHITE);
+                Duration blackTimeLeft = game.getTotalTimeLeft(Color.BLACK);
+
+            %>
                 <tr>
                     <td><%=i+1%></td>
                     <td><%=game.getWhite().getName()%></td>
-                    <td><%=game.totalTime(Color.WHITE)%></td>
+                    <td><%=String.format("%02d:%02d", whiteTimeLeft.toMinutes(), whiteTimeLeft.toSecondsPart())%></td>
                     <td><%=game.getBlack().getName()%></td>
-                    <td><%=game.totalTime(Color.BLACK)%></td>
-                    <% if(game.getWinner() == null) {%>
+                    <td><%=String.format("%02d:%02d", blackTimeLeft.toMinutes(), blackTimeLeft.toSecondsPart())%></td>
+                    <% if (!game.isOver()) {%>
                     <td><%=game.getTurn().opposite%></td>
                     <% if((game.getWhite().getName().equals(user.getName()) && game.getTurn() == Color.WHITE ) || (game.getBlack().getName().equals(user.getName()) && game.getTurn() == Color.BLACK)) { %>
                     <td><form action="game.jsp" method="get">
@@ -50,7 +56,7 @@
                     <td><%=game.getTimestamp()%></td>
                     <% } %>
                     <% } else { %>
-                    <td><%=game.getOutcome()%></td>
+                    <td><%=String.format("%s won by %s.", game.getWinner() == Color.WHITE ? game.getWhite().getName() : game.getBlack().getName(), game.getOutcome().toString().toLowerCase())%></td>
                     <td>
                         <form method="get" action="processPlay.jsp">
                             <%if(game.getWhite().getName().equals(user.getName())) {%>

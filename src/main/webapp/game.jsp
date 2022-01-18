@@ -3,6 +3,7 @@
 <%@ page import="domain.Outcome" %>
 <%@ page import="domain.ChessPiece" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="user" class="domain.ChessPlayer" scope="session"/>
@@ -38,7 +39,20 @@
 </c:if>
 
 <% if (!game.isOver()){
-    if((game.getWhite().getName().equals(user.getName()) && game.getTurn() == Color.WHITE ) || (game.getBlack().getName().equals(user.getName()) && game.getTurn() == Color.BLACK)){%>
+    if((game.getWhite().equals(user) && game.getTurn() == Color.WHITE ) || (game.getBlack().equals(user) && game.getTurn() == Color.BLACK)){
+
+        // If it's the first turn, set firstOpenedTimestamp at launch
+        if (game.getMoves().isEmpty()) {
+            game.setFirstOpenedTimestamp(new Date());
+            cgdm.update(game);
+        } else {
+            // If the last move hadn't been seen before, set seenTimestamp
+            if (!game.getLastMove().hasBeenSeen()) {
+                game.getLastMove().setSeenTimestamp(new Date());
+                cgdm.update(game);
+            }
+        }
+%>
 
 <form action="processMove.jsp" method="post">
     <label for="moveInput">Your move:</label>
@@ -57,7 +71,7 @@
 <p>
     Good game! Outcome:
     <% if (game.getOutcome() == Outcome.CHECKMATE || game.getOutcome() == Outcome.RESIGNATION || game.getOutcome() == Outcome.TIMEOUT) { %>
-    <%= game.getWinner() == Color.BLACK ? game.getBlack().getName() : game.getWhite().getName() %> won!
+    <%=(game.getWinner() == Color.BLACK) ? game.getBlack().getName() : game.getWhite().getName() %> won by <%= game.getOutcome().toString().toLowerCase() %>!
     <% } else { %>
     Draw!
     <% } %>

@@ -29,12 +29,26 @@
 - Deteção de vários finais de jogo, são atualmente suportados:
   - [x] Vitória por _checkmate_
   - [x] Vitória por desistência
+  - [x] Vitória por _timeout_ (desde a implementação da gestão de tempo)
   - [x] Empate por _stalemate_
   - [x] Empate por material insuficiente (rei vs. rei)
   - [x] Empate por limite de _moves [(segundo regras FIDE)](https://en.wikipedia.org/wiki/Fifty-move_rule)
+- Gestão de tempo:
+  - Ao iniciar um jogo, o tempo começará a contar apenas quando a pessoa com as peças brancas fizer a primeira jogada.
+  - O tempo pára de contar após a jogada de um jogador, retomando quando o jogador oposto vê a jogada pela primeira vez (primeira vez que entrar no jogo após uma jogada ser feita).
+    - Portanto, a seguinte situação de exemplo é possível:
+      - O jogador A faz uma jogada
+      - Até o jogador B ver a nova jogada de A, nenhum dos tempos será decrementado
+      - O tempo utilizado pelo jogador B entre o momento em que este vê a jogada de A e faz a sua própria jogada será decrementado no seu tempo total
+      - O jogador B faz uma jogada
+      - Até o jogador A ver a nova jogada de B, nenhum dos tempos será decrementado
+      - (e por aí em diante)
+  - Através da página de perfil (My Games) é possível ver, em tempo real (atualizando) quanto tempo um jogador têm no respetivo jogo.
+  - Um total de uso de tempo para lá do *time control* resultará em vitória do adversário por *timeout*.
+    - Se for necessário alterar o *time control* (duração de um jogo) por razões de teste, este poderá facilmente ser editado no atributo ChessGame.timeControl, em minutos (default 15)
 
 ## Shortcomings (funcionalidades não suportadas ou em progresso, por ordem de importância):
-- [ ] Gestão de tempo (praticamente funcional, será a próxima funcionalidade a ser implementada)
+- [x] ~~Gestão de tempo (praticamente funcional, será a próxima funcionalidade a ser implementada)~~
 - [ ] Promoção de peão (praticamente funcional)
 - [ ] Replay (praticamente funcional)
 - [ ] Finalização de jogo por repetição de posição

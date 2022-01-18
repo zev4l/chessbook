@@ -59,7 +59,7 @@
         <body>
         <h1>ChessBook</h1>
         <h3>${user.name}</h3>
-        <h2>No user with name <%=request.getParameter("name")%> were found.</h2>
+        <h2>No users with name <%=request.getParameter("name")%> were found.</h2>
         <p><a href="profile.jsp">Try again</a></p>
         <p><%=new java.util.Date()%></p>
         <p>
