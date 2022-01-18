@@ -46,11 +46,13 @@
   - Através da página de perfil (My Games) é possível ver, em tempo real (atualizando) quanto tempo um jogador têm no respetivo jogo.
   - Um total de uso de tempo para lá do *time control* resultará em vitória do adversário por *timeout*.
     - Se for necessário alterar o *time control* (duração de um jogo) por razões de teste, este poderá facilmente ser editado no atributo ChessGame.timeControl, em minutos (default 15)
+- Replay:
+  - Esta funcionalidade permite rever um jogo, jogada a jogada, após este terminar. 
 
 ## Shortcomings (funcionalidades não suportadas ou em progresso, por ordem de importância):
 - [x] ~~Gestão de tempo (praticamente funcional, será a próxima funcionalidade a ser implementada)~~
 - [ ] Promoção de peão (praticamente funcional)
-- [ ] Replay (praticamente funcional)
+- [x] ~~Replay~~ 
 - [ ] Finalização de jogo por repetição de posição
 - [ ] Estética melhorada
 - [ ] _En passant_ 
