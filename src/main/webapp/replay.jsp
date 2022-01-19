@@ -94,12 +94,12 @@
         <div class="button-holder">
             <form method="get" action="replay.jsp" id="previousMove">
                 <input type="hidden" name="id" value="<%=game.getId()%>">
-                <input type="hidden" name="moveIdx" value="<%=moveToDisplay - 1%>">
+                <input type="hidden" name="moveIdx" value="<%=moveToDisplay - 1 < 0 ? game.getMoves().size() - 1 : moveToDisplay - 1 %>">
 
             </form>
             <form method="get" action="replay.jsp" id="nextMove">
                 <input type="hidden" name="id" value="<%=game.getId()%>">
-                <input type="hidden" name="moveIdx" value="<%=moveToDisplay + 1%>">
+                <input type="hidden" name="moveIdx" value="<%= moveToDisplay + 1 == game.getMoves().size() ? 0 : moveToDisplay + 1 %>">
             </form>
             <button class="btn btn-lg mb-3" type="submit" form="previousMove" value="Submit"><a><i class="fas fa-angle-left fa-lg"></i></a></button>
             <button class="btn btn-lg mb-3" type="submit" form="nextMove" value="Submit"><a><i class="fas fa-angle-right fa-lg"></i></a></button>
