@@ -1,5 +1,7 @@
 package domain;
 
+import org.eclipse.persistence.sdo.types.SDOWrapperType;
+
 import javax.persistence.*;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -288,6 +290,10 @@ public class ChessGame {
             }
         } else {
             time = Duration.ofMinutes(getTimeControl()).minus(getTotalTimeUsed(c));
+
+            if (time.compareTo(Duration.ZERO) < 0) {
+                time = Duration.ZERO;
+            }
         }
 
         return time;
