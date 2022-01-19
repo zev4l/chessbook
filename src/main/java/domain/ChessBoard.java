@@ -111,8 +111,17 @@ public class ChessBoard {
             if (isCapture(move)) {
                 move.setCapture(get(destination.getRow(), destination.getCol()));
             }
-            // Set new piece at new position
-            set(destination.getRow(), destination.getCol(), move.getPiece());
+
+            if (isPromotion(move)) {
+                // Auto-queen
+                move.setPromotion(ChessPieceKind.QUEEN);
+                // Set new piece at new position
+                set(destination.getRow(), destination.getCol(), new ChessPiece(move.getPromotion(), move.getPiece().getColor()));
+            } else {
+                // Set new piece at new position
+                set(destination.getRow(), destination.getCol(), move.getPiece());
+            }
+
 
             // Set origin square to empty
             remove(origin.getRow(), origin.getCol());
@@ -127,6 +136,9 @@ public class ChessBoard {
         } else {
             // Set destination back to null
             remove(move.getDestination().getRow(), move.getDestination().getCol());
+        }
+        if (move.isPromotion()) {
+            move.getPiece().setChessPieceKind(ChessPieceKind.PAWN);
         }
 
         // Set moved piece back in place

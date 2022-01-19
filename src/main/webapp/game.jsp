@@ -106,9 +106,9 @@
         <form action="processMove.jsp" method="post" class="form-container">
             <input type="hidden" name="game_id" value="<%=game.getId()%>">
             <input type="hidden" name="team" value="<%=game.getTurn()%>">
-            <div class="d-flex">
+            <div class="d-flex align-items-center">
                 <div class="form-group mr-auto">
-                    <input name="move" id="moveInput" type="text" placeholder="Your move">
+                    <input name="move" id="moveInput" type="text" placeholder="Your move" autocomplete="off">
                 </div>
                 <div class="form-group mx-2 ml-auto">
                     <button class="btn btn-md btn-primary btn-block" type="submit">Play</button>

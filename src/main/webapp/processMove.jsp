@@ -47,7 +47,7 @@
             }
             // In case of any other move that isn't castling
         }
-        else if (matcher.results().count() == 2) { // If only two sets of coordinates were specified
+        else if (matcher.results().count() == 2 && moveInput.length == 2) { // If only two sets of coordinates were specified
             char[] origin = moveInput[0].toCharArray();
             int originX = (int) origin[0] - (int) 'a';
             int originY = Character.getNumericValue(origin[1]) - 1;
