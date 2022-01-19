@@ -1,7 +1,9 @@
 package domain;
 
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +47,9 @@ public class ChessGame {
     private Date timestamp;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date lastMoveTimestamp;
+    private Date firstOpenedTimestamp;
+
+    private int timeControl = 15; // In minutes
 
     public ChessGame() {
     }
@@ -84,9 +88,14 @@ public class ChessGame {
         this.timestamp = timestamp;
     }
 
-    public void setLastMoveTimestamp(Date timestamp) {
-        this.lastMoveTimestamp = timestamp;
+    public void setFirstOpenedTimestamp(Date timestamp) {
+        this.firstOpenedTimestamp = timestamp;
     }
+
+    public void setTimeControl(int timeControl) {
+        this.timeControl = timeControl;
+    }
+
 
     /* Getters */
 
@@ -115,8 +124,8 @@ public class ChessGame {
         return board;
     }
 
-    public Date getLastMoveTimestamp() {
-        return lastMoveTimestamp;
+    public Date getFirstOpenedTimestamp() {
+        return firstOpenedTimestamp;
     }
 
     public Color getWinner() {
@@ -131,9 +140,15 @@ public class ChessGame {
         return timestamp;
     }
 
+    public int getTimeControl() {
+        return timeControl;
+    }
+
     public boolean isOver() {
         return getOutcome() != null;
     }
+
+    public boolean hasBeenOpened() {return getFirstOpenedTimestamp() != null;}
 
     /* Other methods */
 
@@ -153,6 +168,12 @@ public class ChessGame {
         // If game isn't over yet!
 
         if (!isOver()) {
+            // Check time
+            if (getTotalTimeLeft(getTurn()) == Duration.ZERO) {
+                setWinner(getTurn().opposite);
+                setOutcome(Outcome.TIMEOUT);
+            }
+
             // Auto-set move details if needed
             if (move.getPiece() == null && !getBoard().isEmpty(move.getOrigin().getRow(), move.getOrigin().getCol())) {
                 move.setPiece(getBoard().get(move.getOrigin().getRow(), move.getOrigin().getCol()));
@@ -189,9 +210,24 @@ public class ChessGame {
                         setOutcome(Outcome.MOVE_LIMIT);
                     }
 
-                    // Add to move list
+                    // Calculate duration (time between previous move being opened and new move being played)
                     move.setIndex(moves.size());
-                    move.setTimestamp(new Date());
+                    move.setPlayedTimestamp(new Date());
+
+                    // If it's the first move, the duration of the move is calculated using firstOpenedTimestamp and move.playedTimestamp
+                    if (getMoves().isEmpty()) {
+                        move.setDuration(Duration.between(
+                                getFirstOpenedTimestamp().toInstant(),
+                                move.getPlayedTimestamp().toInstant()
+                        ));
+                    } else {
+                        move.setDuration(Duration.between(
+                                getLastMove().getSeenTimestamp().toInstant(),
+                                move.getPlayedTimestamp().toInstant()
+                        ));
+                    }
+
+                    // Add to move list
                     moves.add(move);
 
                 } else {
@@ -206,18 +242,52 @@ public class ChessGame {
 
     }
 
-    public String totalTime(Color c) {
-        long totalSeconds = 0;
+    public Duration getTotalTimeUsed(Color c) {
+        Duration total = Duration.ZERO;
 
         for (ChessMove move : getMoves()) {
             if (move.getPiece().getColor() == c) {
-                totalSeconds += move.getDuration();
+                total = total.plus(move.getDuration());
             }
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        return total;
+    }
 
-        return sdf.format(new Date(totalSeconds * 1000));
+    public Duration getTotalTimeLeft(Color c) {
+
+        Duration time;
+
+        if (!getMoves().isEmpty()) {
+            // If it's this player move, and he's already seen the previous move (i.e the time is counting irl, returns the
+            // same when the move is played) (real-time update)
+            if (getLastMove().hasBeenSeen() && getTurn() == c) {
+                time = Duration.ofMinutes(getTimeControl()).minus(
+                        getTotalTimeUsed(c)).plus(
+                        Duration.between(
+                                new Date().toInstant(), getLastMove().getSeenTimestamp().toInstant())
+                );
+            } else { // If current player hasn't seen the previous move
+                time = Duration.ofMinutes(getTimeControl()).minus(getTotalTimeUsed(c));
+            }
+
+            // Return Duration.ZERO when out of time
+            if (time.compareTo(Duration.ZERO) < 0) {
+                time = Duration.ZERO;
+            }
+        } else {
+            if (hasBeenOpened() && c==getTurn()) {
+                time = Duration.ofMinutes(getTimeControl()).minus(
+                        Duration.between(
+                                getFirstOpenedTimestamp().toInstant(), new Date().toInstant())
+                );
+            } else {
+                time = Duration.ofMinutes(getTimeControl());
+            }
+
+        }
+
+        return time;
     }
 
     public ChessMove getLastMove() {

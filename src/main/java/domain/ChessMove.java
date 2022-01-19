@@ -2,6 +2,7 @@ package domain;
 
 import javax.persistence.*;
 
+import java.time.Duration;
 import java.util.Date;
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ public class ChessMove {
     @Id @GeneratedValue(strategy=AUTO)
     private int id;
 
-    private int duration; // Seconds
+    private Duration duration;
 
     @ManyToOne
     private ChessPlayer author;
@@ -53,7 +54,10 @@ public class ChessMove {
     private CastlingDirection castlingDirection;
 
     @Temporal(TemporalType.TIMESTAMP)
-    private Date timestamp;
+    private Date playedTimestamp;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date seenTimestamp;
 
     private int idx;
 
@@ -92,7 +96,7 @@ public class ChessMove {
         this.to = to;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(Duration duration) {
         this.duration = duration;
     }
 
@@ -120,12 +124,16 @@ public class ChessMove {
 
     public void setCastling(CastlingDirection direction) {this.castlingDirection = direction;}
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
+    public void setPlayedTimestamp(Date timestamp) {
+        this.playedTimestamp = timestamp;
     }
 
     public void setIndex(int index) {
         this.idx = index;
+    }
+
+    public void setSeenTimestamp(Date seenTimestamp) {
+        this.seenTimestamp = seenTimestamp;
     }
 
     /* Getters */
@@ -142,7 +150,7 @@ public class ChessMove {
         return to;
     }
 
-    public int getDuration() {
+    public Duration getDuration() {
         return duration;
     }
 
@@ -162,6 +170,14 @@ public class ChessMove {
 
     public CastlingDirection getCastling() {return castlingDirection;}
 
+    public Date getPlayedTimestamp() {
+        return playedTimestamp;
+    }
+
+    public Date getSeenTimestamp() {
+        return seenTimestamp;
+    }
+
     public boolean isCheck() {return isCheck;}
 
     public boolean isCheckmate() {return isCheckmate;}
@@ -172,9 +188,7 @@ public class ChessMove {
 
     public boolean isCastling() {return getCastling() != null;}
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
+    public boolean hasBeenSeen() {return getSeenTimestamp() != null;}
 
     public boolean equals(ChessMove other) {
         if (this == other) return true;

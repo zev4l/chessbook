@@ -17,7 +17,7 @@ public class ChessPiece implements Serializable {
 
     // Setters
     // Necessário para promoção de peão
-    public void setType(ChessPieceKind type) {
+    public void setChessPieceKind(ChessPieceKind type) {
         this.type = type;
     }
 

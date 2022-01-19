@@ -68,6 +68,9 @@ public class TestChessBookDB {
 
         ChessGame testGame = new ChessGame(flynn, clu, new Date());
 
+        // Emulating web access
+        testGame.setFirstOpenedTimestamp(new Date());
+
         cgdm.insert(testGame);
     }
 
@@ -115,10 +118,16 @@ public class TestChessBookDB {
         testMoves.add(move4w);
         testMoves.add(move4b);
 
-        for (ChessMove move : testMoves) {
+        for (ChessMove move: testMoves) {
 
-                // Adding move to game
+            // Adding move to game
             try {
+
+                // Emulating web access
+                if (!testGame.getMoves().isEmpty()) {
+                    testGame.getLastMove().setSeenTimestamp(new Date());
+                }
+
                 testGame.addMove(move);
 
             } catch (IllegalMoveException e) {
@@ -144,6 +153,7 @@ public class TestChessBookDB {
         move5w.setCastling(CastlingDirection.KING_SIDE);
 
         try {
+            testGame.getLastMove().setSeenTimestamp(new Date());
             testGame.addMove(move5w);
         } catch (IllegalMoveException e) {
             e.printStackTrace();
@@ -167,7 +177,10 @@ public class TestChessBookDB {
         ChessMove move6w = new ChessMove(testGame.getWhite(), new ChessPosition(0,3), new ChessPosition(4,7));
 
         try {
+
+            testGame.getLastMove().setSeenTimestamp(new Date());
             testGame.addMove(move5b);
+            testGame.getLastMove().setSeenTimestamp(new Date());
             testGame.addMove(move6w);
         } catch (IllegalMoveException e) {
             e.printStackTrace();
@@ -187,6 +200,8 @@ public class TestChessBookDB {
         // D6 - Jogada inválida, pois é necessário sair do cheque
         ChessMove move6b = new ChessMove(testGame.getBlack(), new ChessPosition(6,3), new ChessPosition(5,3));
 
+
+        testGame.getLastMove().setSeenTimestamp(new Date());
         assertThrows(IllegalMoveException.class, () -> testGame.addMove(move6b));
 
         // Nesta posição apenas se poderão jogar 3 jogadas: Ke7, Kf8 ou g6
@@ -238,10 +253,10 @@ public class TestChessBookDB {
         testMoves.add(move9b);
         testMoves.add(move10w);
 
-        for (ChessMove move : testMoves) {
-
+        for (ChessMove move: testMoves) {
             // Adding move to game
             try {
+                testGame.getLastMove().setSeenTimestamp(new Date());
                 testGame.addMove(move);
 
                 // Persisting on every move
@@ -268,6 +283,7 @@ public class TestChessBookDB {
         ChessPlayer flynn = testGame.getWhite();
 
         ChessMove move10w = new ChessMove(flynn, new ChessPosition(4, 4), new ChessPosition(5,6));
+        testGame.getLastMove().setSeenTimestamp(new Date());
 
         assertTrue(testGame.isOver());
         assertThrows(IllegalMoveException.class, () -> testGame.addMove(move10w));

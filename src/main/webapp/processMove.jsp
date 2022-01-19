@@ -29,7 +29,7 @@
                         new ChessPosition(kingY, 4), new ChessPosition(kingY, 2));
                 move.setCastling(CastlingDirection.QUEEN_SIDE);
                 game.addMove(move);
-    
+                
                 // If castling short/king-side
             } else if (Objects.equals(moveInput[1], "short")) {
                 ChessMove move = new ChessMove(("WHITE".equals(request.getParameter("team")) ? game.getWhite() : game.getBlack()),
@@ -45,9 +45,18 @@
             } else {
                 game.setWinner(Color.WHITE);
             }
+        } else if(Objects.equals(moveInput[0], "resign") && moveInput.length == 1){
+            game.setOutcome(Outcome.RESIGNATION);
+            if (request.getParameter("team").equals("WHITE")) {
+                game.setWinner(Color.BLACK);
+            } else {
+                game.setWinner(Color.WHITE);
+            }
             // In case of any other move that isn't castling
         }
+
         else if (matcher.results().count() == 2) { // If only two sets of coordinates were specified
+
             char[] origin = moveInput[0].toCharArray();
             int originX = (int) origin[0] - (int) 'a';
             int originY = Character.getNumericValue(origin[1]) - 1;

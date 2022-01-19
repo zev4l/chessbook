@@ -60,7 +60,7 @@ public class ChessPlayer {
     }
 
     public boolean equals(ChessPlayer other) {
-        return this.getId() == other.getId() && Objects.equals(this.getName(), other.getName()) && Objects.equals(this.getEmail(), other.getEmail());
+        return Objects.equals(this.getEmail(), other.getEmail());
     }
 
     @Override
