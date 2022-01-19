@@ -45,13 +45,6 @@
             } else {
                 game.setWinner(Color.WHITE);
             }
-        } else if(Objects.equals(moveInput[0], "resign") && moveInput.length == 1){
-            game.setOutcome(Outcome.RESIGNATION);
-            if (request.getParameter("team").equals("WHITE")) {
-                game.setWinner(Color.BLACK);
-            } else {
-                game.setWinner(Color.WHITE);
-            }
             // In case of any other move that isn't castling
         }
 
