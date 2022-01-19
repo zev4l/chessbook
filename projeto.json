@@ -10,7 +10,7 @@
   "aluno1@16/01" : "df528379",
   "aluno2@16/01" : "7275ae9d",
   "aluno3@16/01" : "",
-  "url" : "http://localhost:8080/chessbookweb-1.0-SNAPSHOT/login.jsp",
-  "master@final" : "",
-  "obs":"Devido a uma altura intensive de exames de minor, ainda não nos foi possível implementar ou terminar algumas funcionalidades que gostariamos. Mais informações disponíveis no ficheiro README.MD mais recente."
+  "url" : "http://localhost:8080/chessbookweb-1.0-SNAPSHOT/index.jsp",
+  "master@final" : "c2621686",
+  "obs":"Devido a uma altura intensiva de exames de minor, demoramos mais tempo a implementar todas as funcionalidades que gostariamos. Mais informações disponíveis no ficheiro README.MD mais recente."
 }
