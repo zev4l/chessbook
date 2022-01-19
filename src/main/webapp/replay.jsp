@@ -47,8 +47,16 @@
                         ChessPiece piece = boardAtMove.get(y, x);
 
                         String pieceClass = "";
+                        String checkClass = "";
 
                         if (piece != null) {
+
+                            if ((piece.getChessPieceKind() == ChessPieceKind.KING)) {
+                                if (Validation.isCheck(boardAtMove, piece.getColor())) {
+                                    checkClass = "check";
+                                }
+                            }
+
                             pieceClass = "fas fa-2x ";
 
                             if (piece.getColor() == Color.WHITE) {
@@ -79,7 +87,7 @@
 
             %>
 
-                     <div><i class="<%=pieceClass%>"></i>
+                     <div class="<%=checkClass%>"><i class="<%=pieceClass%>"></i>
                          <% if (x == 0) {
                              %> <span class="rowIndicator"> <%=y+1%> </span> <%
                          }

@@ -55,6 +55,13 @@
                         String checkClass = "";
 
                         if (piece != null) {
+
+                            if ((piece.getChessPieceKind() == ChessPieceKind.KING)) {
+                                if (Validation.isCheck(game.getBoard(), piece.getColor())) {
+                                    checkClass = "check";
+                                }
+                            }
+
                             pieceClass = "fas fa-2x ";
 
                             if (piece.getColor() == Color.WHITE) {
