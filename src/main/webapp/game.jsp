@@ -1,6 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="domain.*" %>
+<%@ page import="java.time.Duration" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <jsp:useBean id="user" class="domain.ChessPlayer" scope="session"/>
@@ -9,7 +10,13 @@
 <jsp:useBean id="moveerror" class="domain.MoveError" scope="request"/>
 
 <% cgdm = cgdm.getInstance();%>
-<% ChessGame game = cgdm.find(Integer.parseInt(request.getParameter("id"))).get();%>
+<% ChessGame game = cgdm.find(Integer.parseInt(request.getParameter("id"))).get();
+    if (game.getTotalTimeLeft(game.getTurn()) == Duration.ZERO) {
+        game.setWinner(game.getTurn().opposite);
+        game.setOutcome(Outcome.TIMEOUT);
+    }
+    cgdm.update(game);
+%>
 
 <html>
 <head>
@@ -27,9 +34,16 @@
         <h1 class="h1 mb-3 font-weight-normal">ChessBook</h1>
         <img class="my-3 logo" src="styles/icon.png" alt="" width="72">
 
-        <h3 class="my-3">
-            <%=game.getWhite().getName()%> (white) vs <%=game.getBlack().getName()%> (black)
-        </h3>
+
+        <div>
+            <h3 class="my-3">
+                <%=game.getWhite().getName()%> (white) vs <%=game.getBlack().getName()%> (black)
+            </h3>
+            <div class="d-flex">
+                <h4 class="whiteTime col"><i class="fas fa-clock text-dark"></i> <%=String.format("%02d:%02d", game.getTotalTimeLeft(Color.WHITE).toMinutes(), game.getTotalTimeLeft(Color.WHITE).toSecondsPart())%></h4>
+                <h4 class="blackTime col"><i class="fas fa-clock text-dark"></i> <%=String.format("%02d:%02d", game.getTotalTimeLeft(Color.BLACK).toMinutes(), game.getTotalTimeLeft(Color.BLACK).toSecondsPart())%></h4>
+            </div>
+        </div>
 
         <div class="chessboard">
             <%
@@ -38,6 +52,7 @@
                         ChessPiece piece = game.getBoard().get(y, x);
 
                         String pieceClass = "";
+                        String checkClass = "";
 
                         if (piece != null) {
                             pieceClass = "fas fa-2x ";
@@ -70,7 +85,7 @@
 
             %>
 
-            <div><i class="<%=pieceClass%>"></i>
+            <div class="<%=checkClass%>"><i class="<%=pieceClass%>"></i>
                 <% if (x == 0) {
                 %> <span class="rowIndicator"> <%=y+1%> </span> <%
                     }

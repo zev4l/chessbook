@@ -258,33 +258,36 @@ public class ChessGame {
 
         Duration time;
 
-        if (!getMoves().isEmpty()) {
-            // If it's this player move, and he's already seen the previous move (i.e the time is counting irl, returns the
-            // same when the move is played) (real-time update)
-            if (getLastMove().hasBeenSeen() && getTurn() == c) {
-                time = Duration.ofMinutes(getTimeControl()).minus(
-                        getTotalTimeUsed(c)).plus(
-                        Duration.between(
-                                new Date().toInstant(), getLastMove().getSeenTimestamp().toInstant())
-                );
-            } else { // If current player hasn't seen the previous move
-                time = Duration.ofMinutes(getTimeControl()).minus(getTotalTimeUsed(c));
-            }
+        if (!isOver()) {
+            if (!getMoves().isEmpty()) {
+                // If it's this player move, and he's already seen the previous move (i.e the time is counting irl, returns the
+                // same when the move is played) (real-time update)
+                if (getLastMove().hasBeenSeen() && getTurn() == c) {
+                    time = Duration.ofMinutes(getTimeControl()).minus(
+                            getTotalTimeUsed(c)).plus(
+                            Duration.between(
+                                    new Date().toInstant(), getLastMove().getSeenTimestamp().toInstant())
+                    );
+                } else { // If current player hasn't seen the previous move
+                    time = Duration.ofMinutes(getTimeControl()).minus(getTotalTimeUsed(c));
+                }
 
-            // Return Duration.ZERO when out of time
-            if (time.compareTo(Duration.ZERO) < 0) {
-                time = Duration.ZERO;
+                // Return Duration.ZERO when out of time
+                if (time.compareTo(Duration.ZERO) < 0) {
+                    time = Duration.ZERO;
+                }
+            } else {
+                if (hasBeenOpened() && c==getTurn()) {
+                    time = Duration.ofMinutes(getTimeControl()).minus(
+                            Duration.between(
+                                    getFirstOpenedTimestamp().toInstant(), new Date().toInstant())
+                    );
+                } else {
+                    time = Duration.ofMinutes(getTimeControl());
+                }
             }
         } else {
-            if (hasBeenOpened() && c==getTurn()) {
-                time = Duration.ofMinutes(getTimeControl()).minus(
-                        Duration.between(
-                                getFirstOpenedTimestamp().toInstant(), new Date().toInstant())
-                );
-            } else {
-                time = Duration.ofMinutes(getTimeControl());
-            }
-
+            time = Duration.ofMinutes(getTimeControl()).minus(getTotalTimeUsed(c));
         }
 
         return time;
