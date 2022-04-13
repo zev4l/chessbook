@@ -1,14 +1,19 @@
 <p align="center">
-  <a href="https://git.alunos.di.fc.ul.pt/fc55373/chessbookdb">
+  <a href="https://github.com/zev4l/chessbook">
     <img src="https://checkra.in/img/icon.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">ChessBookDB</h3>
+  <h3 align="center">ChessBook</h3>
+  <h5 align="center">Projeto para a cadeira de Construção de Sistemas de Software (CSS) (2021/2022)</h5>
 
 </p>
+<div align="center">
+  
 ![Grupo](https://img.shields.io/badge/Grupo-1-green)
-![Augusto](https://img.shields.io/badge/Augusto%20Gouveia-55371-blue)
 ![Jose](https://img.shields.io/badge/Jos%C3%A9%20Almeida-55373-blue)
+![Augusto](https://img.shields.io/badge/Augusto%20Gouveia-55371-blue)
+  
+</div>
 
 ## Instruções:
 * Dentro de um jogo, a interface suporta as seguintes interações:
@@ -69,13 +74,10 @@
 - [ ] Finalização de jogo por repetição de posição (simples de implementar, passado à frente por questões de tempo)
 - [ ] _En passant_ 
 
-## Notas:
-- Razões de entrega atrasada:
-  - Sendo plena altura de exames, preenchida principalmente com exames de Minor, não nos foi possível completar todas as funcionalidades que tinhamos em mente a tempo. Assim, focamo-nos em desenvolver as funcionalidades principais que permitem que o jogo seja jogado, tomando a liberdade de deixar outras para a altura extra fornecida pelo professor.
-  - Falta de um 3º aluno:
-    - Para além da alta pressão de tempo exercida sobre nós, encontramo-nos em falta de 1 aluno, afetando a distribuição de tarefas e tornando o desenvolvimento mais lento.
-    - Aluna em falta: Lívia Batalha (53741) (Razão: desistência)
+## Modelo de Domínio:
 
+<div align="center">
 
-
-<img src="https://git.alunos.di.fc.ul.pt/fc55373/chessbookdb/-/raw/master/planning/domain_model.png" width="50%" height="50%">
+  <img src="./planning/domain_model.png" style="display: block; margin: 0 auto" width="100%">
+  
+</div>
